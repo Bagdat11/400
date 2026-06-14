@@ -121,7 +121,8 @@ HTML_DASHBOARD = """
 
     <script>
         const currentUrl = window.location.protocol + '//' + window.location.host + '/phone';
-        document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(currentUrl)}`;
+// Google API кез келген желіде тұрақты, әрі өте жылдам жұмыс істейді
+document.getElementById('qrImg').src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodeURIComponent(currentUrl)}&choe=UTF-8`;
 
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
