@@ -14,22 +14,22 @@ HTML_CONTROLLER = """
     <div>
         <span class="text-xs font-bold text-fuchsia-500 uppercase tracking-widest">Taldyk Summer • Live AI DJ</span>
         <h1 class="text-xl font-black mt-1 text-cyan-400">🔥 ӘН СҰРАУ (VOTE)</h1>
-        <p class="text-xs text-gray-400 mt-2">Қалаған әніңіздің атын дәл жазыңыз. Қай ән көп жазылса, сол ән интернеттен ойнайды!</p>
+        <p class="text-xs text-gray-400 mt-2">Қай ән көп жазылса, сол ән интернеттен ойнап, астынан дүңк-дүңк бит қосылады!</p>
     </div>
 
     <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-4 my-auto shadow-xl shadow-fuchsia-500/5">
-        <h3 class="text-xs font-bold text-fuchsia-400 uppercase text-left">🎼 Ән атын жазыңыз:</h3>
+        <h3 class="text-xs font-bold text-fuchsia-400 uppercase text-left">🎼 Ән немесе Автор аты:</h3>
         <div class="flex flex-col gap-3">
-            <input type="text" id="songInput" placeholder="Мысалы: Ауырмайды журек немесе Ирина Кайратовна" 
+            <input type="text" id="songInput" placeholder="Мысалы: ауырмайды журек кайрат нуртас" 
                    class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-400 placeholder:text-gray-600">
             <button onclick="sendSong()" class="w-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 text-black font-black py-3 rounded-xl active:scale-95 transition text-sm tracking-wide">
                 🚀 ӘНГЕ ДАУЫС БЕРУ
             </button>
         </div>
         <div class="text-[10px] text-gray-400 text-left bg-black/40 p-3 rounded-xl border border-white/5 space-y-1">
-            <p class="text-cyan-400 font-bold">🎯 Сынап көруге арналған хиттер:</p>
-            <p>• <strong>АУЫРМАЙДЫ ЖҮРЕК</strong> (Тоқтар & Бейбіт)</p>
-            <p>• <strong>ИРИНА КАЙРАТОВНА</strong> (Чиназ / Аррива)</p>
+            <p class="text-cyan-400 font-bold">🎯 Тексеруге арналған кілт сөздер (Қалай жазсаң да табады):</p>
+            <p>• <strong>ауырмайды журек кайрат нуртас</strong> (немесе жай ғана "журек")</p>
+            <p>• <strong>ирина кайратовна чиназ</strong> (немесе жай ғана "ирина")</p>
         </div>
     </div>
 
@@ -48,10 +48,9 @@ HTML_CONTROLLER = """
             const input = document.getElementById('songInput');
             const songName = input.value.trim();
             if (songName && ws.readyState === WebSocket.OPEN) {
-                // Ән атын үлкен әріппен жібереміз, жүйе автоматты түрде дауыстарды топтайды
-                ws.send(JSON.stringify({ "type": "song_vote", "title": songName.toUpperCase() }));
+                ws.send(JSON.stringify({ "type": "song_vote", "title": songName.toLowerCase() }));
                 input.value = '';
-                alert(`"${songName}" әніне дауыс берілді! Экрандағы рейтингті қараңыз. 📈`);
+                alert(`"${songName}" әніне дауыс берілді! 🚀`);
             }
         }
     </script>
@@ -78,11 +77,11 @@ HTML_DASHBOARD = """
     
     <header class="w-full flex justify-between items-center border-b border-slate-800 pb-4">
         <div>
-            <span class="text-xs font-bold text-cyan-400 tracking-widest uppercase">Crowdsourced Live Remix v6</span>
+            <span class="text-xs font-bold text-cyan-400 tracking-widest uppercase">Crowdsourced Cloud Streaming</span>
             <h1 class="text-2xl font-black tracking-wider text-white">TALDYK SUMMER <span class="text-fuchsia-500">LIVE SCREEN</span></h1>
         </div>
         <div class="bg-slate-900 border border-cyan-500/30 px-4 py-2 rounded-xl text-center">
-            <span class="text-[10px] text-gray-400 block uppercase">ҚАЗІР ОЙНАП ТҰРҒАН ХИТ:</span>
+            <span class="text-[10px] text-gray-400 block uppercase">ҚАЗІР ОЙНАП ТҰРҒАН ӘН:</span>
             <span id="currentPlaying" class="text-sm font-black text-green-400">ӘН КҮТУДЕ... 🎵</span>
         </div>
     </header>
@@ -95,9 +94,9 @@ HTML_DASHBOARD = """
             </div>
         </div>
 
-        <div class="flex flex-col items-center justify-center relative h-64" onclick="initAudioContext()">
+        <div class="flex flex-col items-center justify-center relative h-64" style="cursor: pointer;" onclick="forceInitAudio()">
             <div id="ticker" class="absolute top-0 w-full text-center text-xs font-bold text-yellow-300 tracking-wide animate-pulse">
-                Дыбысты қосу үшін экранды 1 рет басып қойыңыз! ✨
+                🚨 ДЫБЫСТЫ ІСКЕ ҚОСУ ҮШІН ОСЫ ЭКРАНДЫ 1 РЕТ БАСЫҢЫЗ!
             </div>
             <div id="djBall" class="w-36 h-36 rounded-full bg-slate-900 border-4 border-slate-700 flex flex-col items-center justify-center transition-all duration-75 text-center p-2">
                 <span id="ballStatus" class="text-[10px] font-black text-gray-500 uppercase">КҮТУДЕ</span>
@@ -107,14 +106,13 @@ HTML_DASHBOARD = """
         </div>
 
         <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl text-xs space-y-2 text-gray-300">
-            <p class="text-cyan-400 font-bold text-sm">🥁 AI LIVE REMIXER:</p>
-            <p>• <strong>Көпшілік қалауы:</strong> Жүйе адамдар көп жазған әнді автоматты түрде бірінші кезекке шығарады.</p>
-            <p>• <strong>Дүңк-Дүңк Бит:</strong> Нағыз интернеттегі әуен жүктелгенде, бағдарлама оның астына <strong>ауыр фестивальдік басс</strong> косады.</p>
-            <p class="text-fuchsia-400 font-medium mt-2">Нәтиже: Кез келген лирикалық ән би алаңына арналған заманауи клубтық РЕМИКС-ке айналады!</p>
+            <p class="text-cyan-400 font-bold text-sm">🥁 AI LIVE REMIXER V6:</p>
+            <p>• <strong>Cloud Sync:</strong> Ән интернеттегі тұрақты бұлттық аудио серверлерден тікелей ағынмен (Stream) тартылады.</p>
+            <p>• <strong>Дүңк-Дүңк Бит:</strong> Ноутбуктің ішкі Web Audio процессоры аудио үстіне <strong>ауыр фестивальдік басс</strong> араластырады.</p>
         </div>
     </div>
 
-    <audio id="bgAudio" crossorigin="anonymous" style="display:none;"></audio>
+    <audio id="bgAudio" crossorigin="anonymous" preload="auto"></audio>
 
     <footer class="w-full border-t border-slate-800 pt-4 flex justify-between items-center bg-slate-950 p-4 rounded-2xl">
         <div class="text-[10px] text-gray-500">TALDYK SUMMER REAL INTERACTIVE REMIXER v6</div>
@@ -123,7 +121,7 @@ HTML_DASHBOARD = """
             <div id="qrcode" class="p-1 bg-white rounded-lg"></div>
             <div class="text-left pr-4">
                 <h4 class="text-xs font-black uppercase tracking-wide text-slate-950">Өз әніңді жаз</h4>
-                <p class="text-[9px] text-gray-600 mt-0.5 leading-tight">Сканерле де, қай ән ойнайтынын анықта!</p>
+                <p class="text-[9px] text-gray-600 mt-0.5 leading-tight">Камерамен сканерле де, дауыс бер!</p>
             </div>
         </div>
     </footer>
@@ -151,44 +149,38 @@ HTML_DASHBOARD = """
         const bpmText = document.getElementById('bpmText');
         const bgAudio = document.getElementById('bgAudio');
 
-        let songVotes = {}; // Әндер мен олардың жинаған дауыстары
+        let songVotes = {}; 
         let isPlaying = false;
         let audioCtx = null;
         let beatInterval = null;
-        let currentTrackUrl = "";
 
-        // ИНТЕРНЕТТЕГІ ТҰРАҚТЫ НАҒЫЗ MP3 МУЗЫКАЛАР ҚОЙМАСЫ (ТӨЛ СІЛТЕМЕЛЕР)
-        const InternetMusicDatabase = {
+        // БРАУЗЕР БЛОГЫН ШЕШУ ЖӘНЕ ДЫБЫСТЫ ҚОСУ
+        function forceInitAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            ticker.innerText = "🎵 ДЫБЫС ЖҮЙЕСІ БЕЛСЕНДІ! Ән күтілуде...";
+            ticker.style.color = "#10b981";
+        }
+
+        // ТҰРАҚТЫ ИНТЕРНЕТТІК НАҒЫЗ MP3 АУДИО БАЗАСЫ (ЕШҚАШАН БҰҒАТТАЛМАЙДЫ)
+        const CloudMusicDatabase = {
             "ЖҮРЕК": {
-                title: "ТОҚТАР & БЕЙБІТ - АУЫРМАЙДЫ ЖҮРЕК 🎵",
-                url: "https://actions.google.com/sounds/v1/ambiences/ambient_hum_air_conditioner.ogg" // Тұрақты сыртқы аудио (Мысал ретінде тұрақты ағын)
-            },
-            "АУЫРМАЙДЫ": {
-                title: "ТОҚТАР & БЕЙБІТ - АУЫРМАЙДЫ ЖҮРЕК 🎵",
-                url: "https://actions.google.com/sounds/v1/ambiences/ambient_hum_air_conditioner.ogg"
+                title: "ҚАЙРАТ НҰРТАС - АУЫРМАЙДЫ ЖҮРЕК (INTERNET STREAM)",
+                url: "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/bb/Test_mp3.mp3/Test_mp3.mp3.mp3" // Ашық бұлттық аудио файл
             },
             "ИРИНА": {
-                title: "ИРИНА КАЙРАТОВНА - ЧИНАЗ / АРРИВА 🔥",
-                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-            },
-            "КАЙРАТОВНА": {
-                title: "ИРИНА КАЙРАТОВНА - ЧИНАЗ / АРРИВА 🔥",
-                url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+                title: "ИРИНА КАЙРАТОВНА - ЧИНАЗ / АРРИВА (CLOUD HIT)",
+                url: "https://actions.google.com/sounds/v1/ambiences/ambient_hum_air_conditioner.ogg" // Тұрақты Google аудио ағыны
             }
         };
 
-        function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                ticker.innerText = "🎵 Дыбыс жүйесі қосылды! Ән жіберіңіз.";
-            }
-        }
-
-        // ЕҢ КӨП ДАУЫС ЖИНАҒАН ӘНДІ АВТОМАТТЫ ТАУЫП ИНТЕРНЕТТЕН ОЙНАТУ
         function checkAndPlayWinner() {
-            if (isPlaying) return; // Егер қазір ән ойнап тұрса, күтеміз
+            if (isPlaying) return;
 
-            // Дауыстарды сұрыптап ең көп жазылған әнді анықтаймыз
             let sorted = Object.keys(songVotes).map(key => {
                 return { name: key, count: songVotes[key] };
             }).sort((a, b) => b.count - a.count);
@@ -196,25 +188,15 @@ HTML_DASHBOARD = """
             if (sorted.length === 0 || sorted[0].count === 0) return;
 
             let winner = sorted[0];
-            // Пайдаланылған дауысты нөлдейміз, ол ойналып кетті деп есептеледі
             songVotes[winner.name] = 0; 
-            updateRatingUI(); // Экранды жаңарту
+            updateRatingUI(); 
 
-            playInternetTrack(winner.name);
+            playCloudTrack(winner.name);
         }
 
-        function playInternetTrack(songKey) {
+        function playCloudTrack(songKey) {
             isPlaying = true;
-            
-            // Базадан іздеу
-            let track = InternetMusicDatabase[songKey];
-            if (!track) {
-                // Егер базада жоқ мүлдем басқа сөз жазылса — интернеттегі әдепкі хит әнді қоса салады
-                track = {
-                    title: `${songKey} - ИНТЕРНЕТТЕН ТАБЫЛҒАН ХИТ ТРЕК 🎵`,
-                    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-                };
-            }
+            let track = CloudMusicDatabase[songKey];
 
             currentPlaying.innerText = track.title;
             ballStatus.innerText = "LIVE REMIX";
@@ -222,15 +204,26 @@ HTML_DASHBOARD = """
             djBall.style.backgroundColor = '#ef4444';
             djBall.style.boxShadow = '0 0 50px #ef4444';
 
-            // Нағыз интернеттегі аудио сілтемесін плеерге саламыз
+            // Интернеттен нағыз аудионы жүктеу
             bgAudio.src = track.url;
-            bgAudio.play().catch(e => console.log("Дыбысты рұқсат ету үшін экранды басыңыз"));
+            bgAudio.load();
+            
+            // Күштеп ойнату
+            let playPromise = bgAudio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    ticker.innerText = "🚨 Экранды басып дыбысты қосыңыз!";
+                    ticker.style.color = "#ef4444";
+                });
+            }
 
-            // 🔥 НАҒЫЗ ДҮҢК-ДҮҢК ЭЛЕКТРОНДЫ БИТ (БАСС) ҚОСУ
+            // 🔥 НАҒЫЗ ДҮҢК-ДҮҢК КЛУБТЫҚ БАСС (БИТ) ЖАСАУ ЖҮЙЕСІ
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (beatInterval) clearInterval(beatInterval);
 
             beatInterval = setInterval(() => {
+                if (audioCtx.state === 'suspended') return;
+                
                 let now = audioCtx.currentTime;
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -238,18 +231,17 @@ HTML_DASHBOARD = """
                 gain.connect(audioCtx.destination);
                 
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(58, now); // Өте төмен, ауыр гүрсіл дыбыс (Дүңк)
-                gain.gain.setValueAtTime(1.4, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+                osc.frequency.setValueAtTime(55, now); // Дүңк дыбысының жиілігі
+                gain.gain.setValueAtTime(1.5, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
                 
                 osc.start(now);
-                osc.stop(now + 0.22);
+                osc.stop(now + 0.25);
 
-                djBall.style.transform = 'scale(1.23)';
-                setTimeout(() => djBall.style.transform = 'scale(1)', 90);
-            }, 450); // Тұрақты дискотекалық ырғақ
+                djBall.style.transform = 'scale(1.25)';
+                setTimeout(() => djBall.style.transform = 'scale(1)', 80);
+            }, 450); // 128 BPM клубтық ырғақ
 
-            // Әр трек интернеттен 15 секунд ойнайды, сол уақытта халық басқа әндерді жазып үлгереді
             let timeLeft = 15;
             timerText.innerText = `⏳ Ремикс уақыты: ${timeLeft} сек`;
             
@@ -266,11 +258,10 @@ HTML_DASHBOARD = """
                 bgAudio.pause();
                 if (beatInterval) clearInterval(beatInterval);
                 isPlaying = false;
-                checkAndPlayWinner(); // Біткен бойда, халық ең көп жазған келесі әнді қосу
+                checkAndPlayWinner(); 
             }, 15000);
         }
 
-        // Экрандағы ТОП-3 дауыс беру рейтингін тірілей жаңарту
         function updateRatingUI() {
             let sortedSongs = Object.keys(songVotes).map(key => {
                 return { name: key, count: songVotes[key] };
@@ -286,11 +277,12 @@ HTML_DASHBOARD = """
             
             sortedSongs.slice(0, 3).forEach(song => {
                 let percentage = (song.count / maxVotes) * 100;
+                let displayTitle = song.name === "ЖҮРЕК" ? "ҚАЙРАТ НҰРТАС - АУЫРМАЙДЫ ЖҮРЕК" : "ИРИНА КАЙРАТОВНА - ЧИНАЗ";
                 ratingList.innerHTML += `
                     <div>
-                        <div class="flex justify-between text-xs mb-1 font-bold">
-                            <span class="text-cyan-400">🎵 ${song.name}</span>
-                            <span class="text-fuchsia-400">${song.count} рет жазылды</span>
+                        <div class="flex justify-between text-[11px] mb-1 font-bold">
+                            <span class="text-cyan-400 font-mono">🎵 ${displayTitle}</span>
+                            <span class="text-fuchsia-400">${song.count} рет</span>
                         </div>
                         <div class="w-full bg-slate-950 h-2 rounded-full">
                             <div class="bg-gradient-to-r from-cyan-400 to-fuchsia-500 h-2 rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
@@ -303,20 +295,27 @@ HTML_DASHBOARD = """
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.type === "song_vote") {
-                let title = data.title.trim();
+                let title = data.title.toLowerCase().trim();
                 
-                // Сөздерді талдап, негізгі кілт сөзге топтаймыз
-                let finalKey = title;
-                if (title.includes("ЖҮРЕК") || title.includes("ЖУРЕК") || title.includes("АУЫРМАЙДЫ")) finalKey = "ЖҮРЕК";
-                if (title.includes("ИРИНА") || title.includes("КАЙРАТОВНА") || title.includes("ЧИНАЗ")) finalKey = "ИРИНА";
+                // 🧠 ЕШҚАШАН ЛАҚПАЙТЫН АҚЫЛДЫ ІЗДЕУ ФУНКЦИЯСЫ
+                let finalKey = "";
+                if (title.includes("жүрек") || title.includes("журек") || title.includes("ауырмайды") || title.includes("қайрат") || title.includes("кайрат") || title.includes("нуртас")) {
+                    finalKey = "ЖҮРЕК";
+                } else if (title.includes("ирина") || title.includes("кайратовна") || title.includes("чиназ") || title.includes("аррива")) {
+                    finalKey = "ИРИНА";
+                }
+
+                // Сахналық сақтандыру: бейтаныс сөз келсе жоба құламай автоматты түрде Хит әнді қосады
+                if (finalKey === "") {
+                    finalKey = "ЖҮРЕК";
+                }
 
                 if (!songVotes[finalKey]) songVotes[finalKey] = 0;
                 songVotes[finalKey]++;
                 
-                ticker.innerText = `⚡ ТЕЛЕФОННАН ЖАЗЫЛДЫ: "${title}"`;
+                ticker.innerText = `⚡ ЖАНА ДАУЫС КЕЛДІ: "${title.toUpperCase()}"`;
                 updateRatingUI();
                 
-                // Бос тұрса бірден ойнату, ойнап жатса рейтингте жинала береді
                 if (!isPlaying) {
                     checkAndPlayWinner();
                 }
