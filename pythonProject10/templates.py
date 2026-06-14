@@ -10,7 +10,7 @@ HTML_CONTROLLER = """
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="h-screen bg-slate-950 text-white flex flex-col justify-between p-6 text-center select-none overflow-hidden">
-
+    
     <div>
         <span class="text-xs font-bold text-fuchsia-500 uppercase tracking-widest">Taldyk Summer • Live DJ</span>
         <h1 class="text-xl font-black mt-1 text-cyan-400">AI REMOTE INTERACTIVE</h1>
@@ -35,10 +35,16 @@ HTML_CONTROLLER = """
     </div>
 
     <script>
-        const ws = new WebSocket(`ws://${window.location.host}/ws`);
-
+        // Протоколды (ws немесе wss) сервердің түріне қарай автоматты таңдау
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
+        
         ws.onopen = () => {
             document.getElementById('status').innerText = "БАЙЛАНЫС: БЕЛСЕНДІ 🌐";
+        };
+
+        ws.onclose = () => {
+            document.getElementById('status').innerText = "БАЙЛАНЫС ҮЗІЛДІ ❌";
         };
 
         if (window.DeviceMotionEvent) {
@@ -74,14 +80,14 @@ HTML_DASHBOARD = """
     <meta charset="UTF-8">
     <title>Taldyk Summer Screen Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght=700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Orbitron', sans-serif; background: radial-gradient(circle, #020617 0%, #000000 100%); }
         .neon-shadow { box-shadow: 0 0 50px #00f0ff; }
     </style>
 </head>
 <body class="h-screen flex flex-col justify-between p-6 md:p-10 text-white overflow-hidden">
-
+    
     <header class="w-full flex justify-between items-center border-b border-slate-800 pb-4">
         <div>
             <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Interactive Tech Zone</span>
@@ -101,7 +107,7 @@ HTML_DASHBOARD = """
         <div id="djBall" class="w-32 h-32 rounded-full bg-cyan-500 border-4 border-white neon-shadow flex items-center justify-center transition-all duration-75">
             <span class="text-xs font-black text-black">AI AUDIO</span>
         </div>
-
+        
         <div id="boomEffect" class="hidden text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-400 mt-6 animate-ping">
             💥 DJ BEAT DROP! 💥
         </div>
@@ -122,17 +128,22 @@ HTML_DASHBOARD = """
     </footer>
 
     <script>
-        document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=http://${window.location.host}/phone`;
+        // Сүйемелдеуші динамикалық QR код сілтемесі
+        const currentUrl = window.location.protocol + '//' + window.location.host + '/phone';
+        document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(currentUrl)}`;
 
-        const ws = new WebSocket(`ws://${window.location.host}/ws`);
+        // Протоколды (ws немесе wss) автоматты түрде анықтау
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
+        
         const djBall = document.getElementById('djBall');
         const boomEffect = document.getElementById('boomEffect');
         const ticker = document.getElementById('ticker');
         const signalCount = document.getElementById('signalCount');
-
+        
         let signalHz = 0;
         let audioCtx = null;
-
+        
         function playBeat() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -141,11 +152,11 @@ HTML_DASHBOARD = """
             const gain = audioCtx.createGain();
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
+            
             osc.type = 'sine';
             osc.frequency.setValueAtTime(130, audioCtx.currentTime);
             gain.gain.setValueAtTime(1, audioCtx.currentTime);
-
+            
             gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
             osc.start();
             osc.stop(audioCtx.currentTime + 0.3);
@@ -168,7 +179,7 @@ HTML_DASHBOARD = """
                     djBall.style.backgroundColor = '#f43f5e';
                     djBall.style.boxShadow = '0 0 70px #f43f5e';
                     boomEffect.classList.remove('hidden');
-
+                    
                     setTimeout(() => {
                         djBall.style.backgroundColor = '#06b6d4';
                         djBall.style.boxShadow = '0 0 50px #00f0ff';
