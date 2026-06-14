@@ -1,6 +1,6 @@
 # main.py
 
-import os  # Сервердің ішкі баптауларын (ПОРТ-ты) оқу үшін қажет кітапхана
+import os
 import uvicorn
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
@@ -37,7 +37,6 @@ async def websocket_endpoint(websocket: WebSocket):
             pass
 
 if __name__ == "__main__":
-    # Бұлттық (Cloud) сервер интернетке шыққанда беретін ПОРТ-ты автоматты түрде ұстау.
-    # Егер локальді жұмыс істесе, автоматты түрде баяғы 8000 портын алады.
+    # Render немесе Railway беретін динамикалық ПОРТ-ты автоматты түрде ұстау
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
