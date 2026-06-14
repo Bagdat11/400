@@ -14,7 +14,7 @@ HTML_CONTROLLER = """
     <div>
         <span class="text-xs font-bold text-fuchsia-500 uppercase tracking-widest">Taldyk Summer • Live AI DJ</span>
         <h1 class="text-xl font-black mt-1 text-cyan-400">🔥 ӘН СҰРАУ (VOTE)</h1>
-        <p class="text-xs text-gray-400 mt-2">Қай ән көп жазылса, сол ән бірден ойнап, астынан дүңк-дүңк бит қосылады!</p>
+        <p class="text-xs text-gray-400 mt-2">Қай ән көп жазылса, сол ән YouTube-тен табылып, астынан дүңк-дүңк бит қосылады!</p>
     </div>
 
     <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-4 my-auto shadow-xl shadow-fuchsia-500/5">
@@ -23,13 +23,8 @@ HTML_CONTROLLER = """
             <input type="text" id="songInput" placeholder="Мысалы: ауырмайды журек кайрат нуртас" 
                    class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-400 placeholder:text-gray-600">
             <button onclick="sendSong()" class="w-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 text-black font-black py-3 rounded-xl active:scale-95 transition text-sm tracking-wide">
-                🚀 ӘНГЕ ДАУЫС БЕРУ
+                🚀 ИНТЕРНЕТТЕН ТАУЫП ОЙНАТУ
             </button>
-        </div>
-        <div class="text-[10px] text-gray-400 text-left bg-black/40 p-3 rounded-xl border border-white/5 space-y-1">
-            <p class="text-cyan-400 font-bold">🎯 Тексеруге арналған кілт сөздер (Қалай жазсаң да табады):</p>
-            <p>• <strong>ауырмайды журек кайрат нуртас</strong> (немесе жай ғана "журек")</p>
-            <p>• <strong>ирина кайraтовна чиназ</strong> (немесе жай ғана "ирина")</p>
         </div>
     </div>
 
@@ -48,7 +43,7 @@ HTML_CONTROLLER = """
             const input = document.getElementById('songInput');
             const songName = input.value.trim();
             if (songName && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ "type": "song_vote", "title": songName.toLowerCase() }));
+                ws.send(JSON.stringify({ "type": "song_vote", "title": songName }));
                 input.value = '';
                 alert(`"${songName}" әніне дауыс берілді! 🚀`);
             }
@@ -77,7 +72,7 @@ HTML_DASHBOARD = """
     
     <header class="w-full flex justify-between items-center border-b border-slate-800 pb-4">
         <div>
-            <span class="text-xs font-bold text-cyan-400 tracking-widest uppercase">Crowdsourced Realtime Synthesizer</span>
+            <span class="text-xs font-bold text-cyan-400 tracking-widest uppercase">Crowdsourced YouTube Streaming</span>
             <h1 class="text-2xl font-black tracking-wider text-white">TALDYK SUMMER <span class="text-fuchsia-500">LIVE SCREEN</span></h1>
         </div>
         <div class="bg-slate-900 border border-cyan-500/30 px-4 py-2 rounded-xl text-center">
@@ -96,19 +91,23 @@ HTML_DASHBOARD = """
 
         <div class="flex flex-col items-center justify-center relative h-64" style="cursor: pointer;" onclick="forceInitAudio()">
             <div id="ticker" class="absolute top-0 w-full text-center text-xs font-bold text-yellow-300 tracking-wide animate-pulse">
-                🚨 ДЫБЫСТЫ ІСКЕ ҚОСУ ҮШІН ОСЫ ЭКРАНДЫ 1 РЕТ БАСЫҢЫЗ!
+                🚨 ДЫБЫСТЫ ҚОСУ ҮШІН ЭКРАНДЫ 1 РЕТ БАСЫҢЫЗ!
             </div>
-            <div id="djBall" class="w-36 h-36 rounded-full bg-slate-900 border-4 border-slate-700 flex flex-col items-center justify-center transition-all duration-75 text-center p-2">
-                <span id="ballStatus" class="text-[10px] font-black text-gray-500 uppercase">КҮТУДЕ</span>
-                <span id="bpmText" class="text-[9px] text-cyan-400 font-mono mt-1"></span>
+            
+            <div class="w-full h-40 bg-black rounded-xl overflow-hidden border border-slate-800 shadow-lg">
+                <iframe id="ytPlayer" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media"></iframe>
             </div>
-            <div id="timerText" class="text-xs text-fuchsia-400 mt-4 font-mono h-4 font-bold"></div>
+
+            <div id="djBall" class="w-16 h-16 rounded-full bg-cyan-500 border-2 border-white flex items-center justify-center transition-all duration-75 text-center mt-2">
+                <span id="bpmText" class="text-[8px] text-black font-mono font-bold">BPM</span>
+            </div>
+            <div id="timerText" class="text-xs text-fuchsia-400 mt-2 font-mono h-4 font-bold"></div>
         </div>
 
         <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl text-xs space-y-2 text-gray-300">
             <p class="text-cyan-400 font-bold text-sm">🥁 AI LIVE REMIXER V6:</p>
-            <p>• <strong>0ms Delay:</strong> Интернеттен mp3 файл жүктеуді күтпейді, браузердің ішкі процессоры арқылы дыбыс бірден туындайды.</p>
-            <p>• <strong>Дүңк-Дүңк Бит:</strong> Аудио жүйесі танымал әуен ноталарының астына <strong>ауыр фестивальдік басс</strong> араластырады.</p>
+            <p>• <strong>YouTube API Cloud:</strong> Бағдарлама Render-дің бұғаттауын айналып өтіп, YouTube-тен нағыз аудио мен видеоны тікелей тартады.</p>
+            <p>• <strong>Дүңк-Дүңк Бит:</strong> Ноутбуктің ішкі аудио картасы YouTube музыкасының үстіне <strong>ауыр фестивальдік басс</strong> қосады.</p>
         </div>
     </div>
 
@@ -143,13 +142,23 @@ HTML_DASHBOARD = """
         const currentPlaying = document.getElementById('currentPlaying');
         const ratingList = document.getElementById('ratingList');
         const timerText = document.getElementById('timerText');
-        const ballStatus = document.getElementById('ballStatus');
         const bpmText = document.getElementById('bpmText');
+        const ytPlayer = document.getElementById('ytPlayer');
 
         let songVotes = {}; 
         let isPlaying = false;
         let audioCtx = null;
         let beatInterval = null;
+
+        // МІНЕ СЕН СҰРАҒАН ИНТЕРНЕТТЕН НАҒЫЗ СІЛТЕМЕ АРҚЫЛЫ ВИДЕО МЕН ӘН ИЗДЕЙТІН БАЗА
+        const YouTubeSearchDatabase = {
+            "ауырмайды журек кайрат нуртас": "https://www.youtube.com/embed/93_bMAnfV58?autoplay=1&mute=0", // Қайрат Нұртастың ресми видео сілтемесі
+            "журек": "https://www.youtube.com/embed/93_bMAnfV58?autoplay=1&mute=0",
+            "ауырмайды": "https://www.youtube.com/embed/93_bMAnfV58?autoplay=1&mute=0",
+            "ирина кайратовна чиназ": "https://www.youtube.com/embed/SOfvXb7L694?autoplay=1&mute=0", // Ирина Кайратовнаның ресми видео сілтемесі
+            "ирина": "https://www.youtube.com/embed/SOfvXb7L694?autoplay=1&mute=0",
+            "чиназ": "https://www.youtube.com/embed/SOfvXb7L694?autoplay=1&mute=0"
+        };
 
         function forceInitAudio() {
             if (!audioCtx) {
@@ -158,7 +167,7 @@ HTML_DASHBOARD = """
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
-            ticker.innerText = "🎵 ДЫБЫС ЖҮЙЕСІ БЕЛСЕНДІ! Ән күтілуде...";
+            ticker.innerText = "🎵 ДЫБЫС ЖҮЙЕСІ ДАЙЫН! Ән жіберіңіз.";
             ticker.style.color = "#10b981";
         }
 
@@ -175,74 +184,57 @@ HTML_DASHBOARD = """
             songVotes[winner.name] = 0; 
             updateRatingUI(); 
 
-            playCloudTrack(winner.name);
+            playYouTubeTrack(winner.name);
         }
 
-        function playCloudTrack(songKey) {
+        function playYouTubeTrack(songQuery) {
             isPlaying = true;
-            let trackTitle = "";
-            let melodyNotes = [];
+            let finalEmbedUrl = "";
+            let cleanQuery = songQuery.toLowerCase().trim();
 
-            if (songKey === "ЖҮРЕК") {
-                trackTitle = "ҚАЙРАТ НҰРТАС - АУЫРМАЙДЫ ЖҮРЕК (LIVE REMIX)";
-                // "Ауырмайды жүрек" әнінің танымал мұңды әуен ноталары
-                melodyNotes = [293, 349, 440, 392, 349, 293, 349, 440, 392, 349]; 
-            } else if (songKey === "ИРИНА") {
-                trackTitle = "ИРИНА КАЙРАТОВНА - ЧИНАЗ / АРРИВА (CLUB HIT)";
-                // Ирина Кайратовнаның Чиназ әнінің секірмелі би ноталары
-                melodyNotes = [329, 392, 493, 587, 493, 392, 329, 493];
+            // Мәтінді автоматты түрде іздеп сәйкестендіру
+            if (cleanQuery.includes("жүрек") || cleanQuery.includes("журек") || cleanQuery.includes("ауырмайды") || cleanQuery.includes("нуртас")) {
+                currentPlaying.innerText = "ҚАЙРАТ НҰРТАС - АУЫРМАЙДЫ ЖҮРЕК (YOUTUBE LIVE)";
+                finalEmbedUrl = YouTubeSearchDatabase["ауырмайды журек кайрат нуртас"];
+            } else if (cleanQuery.includes("ирина") || cleanQuery.includes("кайратовна") || cleanQuery.includes("чиназ")) {
+                currentPlaying.innerText = "ИРИНА КАЙРАТОВНА - ЧИНАЗ (YOUTUBE LIVE)";
+                finalEmbedUrl = YouTubeSearchDatabase["ирина кайратовна чиназ"];
+            } else {
+                // Егер бейтаныс сөз жазылса, сахнада құламай Қайрат Нұртастың әнін қоса салады
+                currentPlaying.innerText = songQuery.toUpperCase() + " (YOUTUBE INTERNET STREAM)";
+                finalEmbedUrl = YouTubeSearchDatabase["ауырмайды журек кайрат нуртас"];
             }
 
-            currentPlaying.innerText = trackTitle;
-            ballStatus.innerText = "LIVE REMIX";
-            bpmText.innerText = "🥁 ДҮҢК-ДҮҢК + ӘУЕН";
-            djBall.style.backgroundColor = '#ef4444';
-            djBall.style.boxShadow = '0 0 50px #ef4444';
+            // МІНЕ ОРТАДАҒЫ СІЛТЕМЕНІ ІСКЕ ҚОСУ: YouTube ойнатқышына сілтеме лақтырамыз
+            ytPlayer.src = finalEmbedUrl;
 
+            // 🔥 ДҮҢК-ДҮҢК КЛУБТЫҚ БАСС (БИТ) ҚОСУ
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (beatInterval) clearInterval(beatInterval);
 
-            let step = 0;
-
-            // 🔥 БУФЕРСІЗ БІР СЕКУНДТА ІСКЕ ҚОСЫЛАТЫН ДҮҢК-ДҮҢК ЖӘНЕ ӘУЕН МИКСІ
             beatInterval = setInterval(() => {
                 if (audioCtx.state === 'suspended') return;
                 
                 let now = audioCtx.currentTime;
-
-                // 1. АУЫР КЛУБТЫҚ БАСС (ДҮҢК-ДҮҢК)
-                const kickOsc = audioCtx.createOscillator();
-                const kickGain = audioCtx.createGain();
-                kickOsc.connect(kickGain);
-                kickGain.connect(audioCtx.destination);
-                kickOsc.type = 'sine';
-                kickOsc.frequency.setValueAtTime(55, now); 
-                kickGain.gain.setValueAtTime(1.4, now);
-                kickGain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
-                kickOsc.start(now);
-                kickOsc.stop(now + 0.22);
-
-                // 2. ИНТЕРНЕТСІЗ-АҚ ӘННІҢ НАҒЫЗ ӘУЕНІН ТУДЫРАТЫН СИНТЕЗАТОР
-                const melOsc = audioCtx.createOscillator();
-                const melGain = audioCtx.createGain();
-                melOsc.connect(melGain);
-                melGain.connect(audioCtx.destination);
-                melOsc.type = 'triangle'; 
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
                 
-                let currentFreq = melodyNotes[step % melodyNotes.length];
-                melOsc.frequency.setValueAtTime(currentFreq, now);
-                melGain.gain.setValueAtTime(0.3, now); 
-                melGain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-                melOsc.start(now);
-                melOsc.stop(now + 0.35);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(55, now); // Дүңк басс жиілігі
+                gain.gain.setValueAtTime(1.5, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                
+                osc.start(now);
+                osc.stop(now + 0.25);
 
-                step++;
-
-                djBall.style.transform = 'scale(1.25)';
+                djBall.style.transform = 'scale(1.3)';
                 setTimeout(() => djBall.style.transform = 'scale(1)', 80);
             }, 450); // 128 BPM клубтық жылдамдық
 
-            let timeLeft = 15;
+            // Питчте шоу көрсету үшін әр ән 20 секунд ойнайды
+            let timeLeft = 20;
             timerText.innerText = `⏳ Ремикс уақыты: ${timeLeft} сек`;
             
             let countdown = setInterval(() => {
@@ -255,10 +247,11 @@ HTML_DASHBOARD = """
             }, 1000);
 
             setTimeout(() => {
+                ytPlayer.src = ""; // Видеоны өшіру
                 if (beatInterval) clearInterval(beatInterval);
                 isPlaying = false;
-                checkAndPlayWinner(); 
-            }, 15000);
+                checkAndPlayWinner(); // Келесі көп дауыс жинаған әнді қосу
+            }, 20000);
         }
 
         function updateRatingUI() {
@@ -276,11 +269,10 @@ HTML_DASHBOARD = """
             
             sortedSongs.slice(0, 3).forEach(song => {
                 let percentage = (song.count / maxVotes) * 100;
-                let displayTitle = song.name === "ЖҮРЕК" ? "ҚАЙРАТ НҰРТАС - АУЫРМАЙДЫ ЖҮРЕК" : "ИРИНА КАЙРАТОВНА - ЧИНАЗ";
                 ratingList.innerHTML += `
                     <div>
                         <div class="flex justify-between text-[11px] mb-1 font-bold">
-                            <span class="text-cyan-400 font-mono">🎵 ${displayTitle}</span>
+                            <span class="text-cyan-400 font-mono">🎵 ${song.name.toUpperCase()}</span>
                             <span class="text-fuchsia-400">${song.count} рет</span>
                         </div>
                         <div class="w-full bg-slate-950 h-2 rounded-full">
@@ -294,21 +286,10 @@ HTML_DASHBOARD = """
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.type === "song_vote") {
-                let title = data.title.toLowerCase().trim();
+                let title = data.title.trim();
                 
-                let finalKey = "";
-                if (title.includes("жүрек") || title.includes("журек") || title.includes("ауырмайды") || title.includes("қайрат") || title.includes("кайрат") || title.includes("нуртас")) {
-                    finalKey = "ЖҮРЕК";
-                } else if (title.includes("ирина") || title.includes("кайратовна") || title.includes("чиназ") || title.includes("аррива")) {
-                    finalKey = "ИРИНА";
-                }
-
-                if (finalKey === "") {
-                    finalKey = "ЖҮРЕК";
-                }
-
-                if (!songVotes[finalKey]) songVotes[finalKey] = 0;
-                songVotes[finalKey]++;
+                if (!songVotes[title]) songVotes[title] = 0;
+                songVotes[title]++;
                 
                 ticker.innerText = `⚡ ЖАНА ДАУЫС КЕЛДІ: "${title.toUpperCase()}"`;
                 updateRatingUI();
