@@ -14,16 +14,16 @@ HTML_CONTROLLER = """
     <div>
         <span class="text-xs font-bold text-fuchsia-500 uppercase tracking-widest">Taldyk Summer • Live AI DJ</span>
         <h1 class="text-xl font-black mt-1 text-cyan-400">ЖАНДЫ ПЛЕЙЛИСТ 🎵</h1>
-        <p class="text-xs text-gray-400 mt-2">Кез келген ән атын (қазақша, орысша, шетелдік) жазыңыз. Жүйе оны интернеттен тауып, DJ Бит қосып ойнатады!</p>
+        <p class="text-xs text-gray-400 mt-2">Кез келген ән атын жазыңыз. Жүйе оны интернеттен тауып, DJ Бит қосып ойнатады!</p>
     </div>
 
     <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-4 my-auto shadow-xl shadow-fuchsia-500/5">
         <h3 class="text-xs font-bold text-fuchsia-400 uppercase text-left">🎼 Ән немесе Орындаушы:</h3>
         <div class="flex flex-col gap-3">
-            <input type="text" id="songInput" placeholder="Мысалы: Ауырмайды журек, 50k, Президент" 
+            <input type="text" id="songInput" placeholder="Мысалы: Ауырмайды журек, 50k" 
                    class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-400 placeholder:text-gray-600">
             <button onclick="sendSong()" class="w-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 text-black font-black py-3 rounded-xl active:scale-95 transition text-sm tracking-wide">
-                🚀 ӘНДІ ИНТЕРНЕТТЕН ТАБУ
+                🚀 ӘНДІ КЕЗЕККЕ ҚОСУ
             </button>
         </div>
     </div>
@@ -45,7 +45,7 @@ HTML_CONTROLLER = """
             if (songName && ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({ "type": "enqueue_song", "title": songName }));
                 input.value = '';
-                alert(`"${songName}" іздеуге жіберілді және кезекке қосылды! 🔎`);
+                alert(`"${songName}" кезекке қосылды! 🔎`);
             }
         }
     </script>
@@ -60,10 +60,13 @@ HTML_DASHBOARD = """
     <meta charset="UTF-8">
     <title>Taldyk Summer Screen Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght=700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Orbitron', sans-serif; background: radial-gradient(circle, #020617 0%, #000000 100%); }
         .neon-shadow { box-shadow: 0 0 50px #ef4444; }
+        /* QR кодтың ақ фоны әдемі көрінуі үшін */
+        #qrcode img { display: inline-block !important; }
     </style>
 </head>
 <body class="h-screen flex flex-col justify-between p-6 text-white overflow-hidden">
@@ -100,9 +103,9 @@ HTML_DASHBOARD = """
 
         <div class="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl text-xs space-y-2 text-gray-300">
             <p class="text-cyan-400 font-bold text-sm">🔥 РОБОТ-DJ ИННОВАЦИЯСЫ:</p>
-            <p>• **Тірі іздеу:** Жүйе ашық музыкалық API-ден нағыз әннің аудиосын (mp3) лезде суырып алады.</p>
-            <p>• **AI Бит Сплиттер:** Ән ойнап жатқанда, Web Audio API оның үстіне **128 BPM клубтық басс битін** қолдан жасап қосады.</p>
-            <p class="text-fuchsia-400 font-medium mt-2">Нәтиже: Кез келген лирикалық ән бір секундта би алаңына арналған заманауи клубтық РЕМИКС-ке айналады!</p>
+            <p>• **Тірі іздеу:** Жүйе ашық музыкалық базадан нағыз әннің аудиосын (mp3) лезде суырып алады.</p>
+            <p>• **AI Бит Сплиттер:** Ән ойнап жатқанда, жүйе оның үстіне **128 BPM клубтық басс битін** қолдан жасап қосады.</p>
+            <p class="text-fuchsia-400 font-medium mt-2">Нәтиже: Кез келген лирикалық ән бір секундта би алаңына арналған клубтық РЕМИКС-ке айналады!</p>
         </div>
     </div>
 
@@ -110,19 +113,27 @@ HTML_DASHBOARD = """
 
     <footer class="w-full border-t border-slate-800 pt-4 flex justify-between items-center bg-slate-950 p-4 rounded-2xl">
         <div class="text-[10px] text-gray-500">TALDYK SUMMER REAL MUSIC DJ ENGINE v5</div>
-        <div class="bg-white p-1 rounded-xl flex items-center gap-2">
-            <img id="qrImg" src="" alt="QR" class="w-14 h-14">
-            <div class="text-black text-left pr-2">
-                <h4 class="text-[10px] font-black uppercase">Нағыз ән қос</h4>
-                <p class="text-[8px] text-gray-500 mt-0.5">Сканерле де, атын жаз!</p>
+        
+        <div class="bg-white p-2 rounded-2xl flex items-center gap-4 text-black shadow-lg shadow-white/5">
+            <div id="qrcode" class="p-1 bg-white rounded-lg"></div>
+            <div class="text-left pr-4">
+                <h4 class="text-xs font-black uppercase tracking-wide text-slate-950">Өз әніңді қос</h4>
+                <p class="text-[9px] text-gray-600 mt-0.5 leading-tight">Камерамен сканерле де,<br>қалаған әніңнің атын жаз!</p>
             </div>
         </div>
     </footer>
 
     <script>
-        const currentUrl = window.location.protocol + '//' + window.location.host + '/phone';
-// Google API кез келген желіде тұрақты, әрі өте жылдам жұмыс істейді
-document.getElementById('qrImg').src = `https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodeURIComponent(currentUrl)}&choe=UTF-8`;
+        // Сыртқы API қолданбай, тікелей браузердің ішінде QR код құрастыру
+        const phoneUrl = window.location.origin + '/phone';
+        new QRCode(document.getElementById("qrcode"), {
+            text: phoneUrl,
+            width: 85,
+            height: 85,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
 
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
@@ -157,8 +168,7 @@ document.getElementById('qrImg').src = `https://chart.googleapis.com/chart?chs=1
             });
         }
 
-        // КЕРЕМЕТ ИДЕЯ: ИНТЕРНЕТТЕН (DEEZER АРҚЫЛЫ) НАҒЫЗ MP3 ТАБУ ФУНКЦИЯСЫ
-        async doFetchAndPlay() {
+        async function doFetchAndPlay() {
             if (songQueue.length === 0) {
                 isPlaying = false;
                 currentPlaying.innerText = "ӘН КҮТУДЕ... 🎵";
@@ -179,31 +189,27 @@ document.getElementById('qrImg').src = `https://chart.googleapis.com/chart?chs=1
             currentPlaying.innerText = `ТАБЫЛУДА: ${querySong}...`;
 
             try {
-                // Deezer-дің ашық API-іне сұраныс жіберіп, әнді іздейміз
                 let response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://api.deezer.com/search?q=' + querySong)}`);
                 let resData = await response.json();
                 let searchResult = JSON.parse(resData.contents);
 
                 if (searchResult.data && searchResult.data.length > 0) {
-                    let track = searchResult.data[0]; // Ең бірінші шыққан ресми тректі аламыз
-                    let mpUrl = track.preview; // Оның 30 секундтық тірі mp3 сілтемесі
+                    let track = searchResult.data[0];
+                    let mpUrl = track.preview;
                     let realTitle = track.title + " - " + track.artist.name;
 
                     currentPlaying.innerText = realTitle.toUpperCase();
                     ballStatus.innerText = "LIVE REMIX";
                     bpmText.innerText = "🔥 +128 BPM BASS";
-                    djBall.style.backgroundColor = '#ef4444'; // Қызыл түс (Жанды дискотека)
+                    djBall.style.backgroundColor = '#ef4444';
                     djBall.style.boxShadow = '0 0 50px #ef4444';
 
-                    // Аудионы ойнату
                     bgAudio.src = mpUrl;
                     bgAudio.play();
 
-                    // Тірілей электронды гүн-гүн бит (Бассты) қосу циклі
                     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                     if (beatInterval) clearInterval(beatInterval);
 
-                    // Клубтық 128 BPM ырғақ (әр 450 миллисекунд сайын ауыр басс соғады)
                     beatInterval = setInterval(() => {
                         const osc = audioCtx.createOscillator();
                         const gain = audioCtx.createGain();
@@ -211,19 +217,17 @@ document.getElementById('qrImg').src = `https://chart.googleapis.com/chart?chs=1
                         gain.connect(audioCtx.destination);
                         
                         osc.type = 'sine';
-                        osc.frequency.setValueAtTime(65, audioCtx.currentTime); // Өте төмен, ауыр фестивальдік БАСС (ГҮН)
+                        osc.frequency.setValueAtTime(65, audioCtx.currentTime);
                         gain.gain.setValueAtTime(1.2, audioCtx.currentTime);
                         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
                         
                         osc.start();
                         osc.stop(audioCtx.currentTime + 0.2);
 
-                        // Шарды нағыз битпен секірту
                         djBall.style.transform = 'scale(1.18)';
                         setTimeout(() => djBall.style.transform = 'scale(1)', 80);
                     }, 450);
 
-                    // Ән аяқталғанда немесе 25 секундтан кейін келесі әнді автоматты қосу
                     let timeLeft = 25;
                     timerText.innerText = `⏳ Ремикс уақыты: ${timeLeft} сек`;
                     
@@ -239,7 +243,7 @@ document.getElementById('qrImg').src = `https://chart.googleapis.com/chart?chs=1
                     setTimeout(() => {
                         bgAudio.pause();
                         if (beatInterval) clearInterval(beatInterval);
-                        doFetchAndPlay(); // Келесі әнді қосу
+                        doFetchAndPlay();
                     }, 25000);
 
                 } else {
